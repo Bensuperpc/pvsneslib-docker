@@ -1,0 +1,27 @@
+name: Dockcross CI
+
+on:
+  push:
+    branches:
+    - 'master'
+    - 'dev'
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+    branches:
+    - '*'
+  schedule:
+    - cron: '0 7 * * 1'  # every monday at 7:00 https://crontab.guru/#0_7_*_*_1
+
+jobs:
+  image:
+    name: build and deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: build
+        run: docker build -t bensuperpc/pvsneslib .
+      - name: deploy
+        if: github.ref == 'refs/heads/master'
+        run: |
+            docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+            docker image push bensuperpc/pvsneslib

@@ -6,15 +6,16 @@
 # i386 because if we use 64bit gcc some tools segault.
 # trusty because some tools don't compile with latest gcc.
 # didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
-FROM i386/ubuntu:trusty
+FROM i386/ubuntu:focal
 
+ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g++ git wget cmake -y 
 
-RUN git clone https://github.com/vhelin/wla-dx /wla-dx\
-	&& cd /wla-dx\
-	&& mkdir build && cd build\
-	&& cmake ..\
-	&& cmake --build . --config Release\
+RUN git clone https://github.com/vhelin/wla-dx /wla-dx \
+	&& cd /wla-dx \
+	&& mkdir build && cd build \
+	&& cmake .. \
+	&& cmake --build . --config Release -- -j 6 \
 	&& cmake -P cmake_install.cmake
 
 RUN git clone https://github.com/boldowa/snesbrr /snesbrr
@@ -34,28 +35,28 @@ RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
 RUN cd /c/snesdev/tools/constify \
 	&& cp Makefile Makefile.orig\
 	&& sed 's:-lregex::g' Makefile.orig >Makefile\
-	&& make all -j4 \
+	&& make all -j6 \
 	&& cp constify.exe /bin/constify
 
 WORKDIR /c/snesdev/tools/snestools
-RUN make all -j4
+RUN make all -j6
 RUN cp snestools.exe /c/snesdev/devkitsnes/tools/snestools
 
 WORKDIR /c/snesdev/tools/gfx2snes
-RUN make all -j4
+RUN make all -j6
 RUN cp gfx2snes.exe /c/snesdev/devkitsnes/tools/gfx2snes
 
 WORKDIR /c/snesdev/tools/bin2txt
-COPY bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
-RUN make all -j4
+COPY patch/bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
+RUN make all -j6
 RUN cp bin2txt.exe /c/snesdev/devkitsnes/tools/bin2txt
 
 WORKDIR /c/snesdev/tools/smconv
-RUN make all -j4
+RUN make all -j6
 RUN cp smconv.exe /c/snesdev/devkitsnes/tools/smconv
 
 WORKDIR /snesbrr/src
-RUN make all -j4
+RUN make all -j6
 RUN cp snesbrr /c/snesdev/devkitsnes/tools/snesbrr
 
 RUN chmod 777 /c/snesdev/devkitsnes/bin/*

@@ -64,4 +64,7 @@ ENV PATH="/c/snesdev/devkitsnes/bin:${PATH}"
 
 ENV PVSNESLIB_HOME="/c/snesdev/"
 
+# Run tests
+RUN cd /c/snesdev/snes-examples && make all && make clean
+
 WORKDIR /src

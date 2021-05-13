@@ -46,6 +46,7 @@ RUN make all
 RUN cp gfx2snes.exe /c/snesdev/devkitsnes/tools/gfx2snes
 
 WORKDIR /c/snesdev/tools/bin2txt
+COPY bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
 RUN make all
 RUN cp bin2txt.exe /c/snesdev/devkitsnes/tools/bin2txt
 

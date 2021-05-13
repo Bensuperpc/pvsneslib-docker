@@ -1,9 +1,10 @@
-name: Dockcross CI
+name: pvsneslib-docker
 
 on:
   push:
     branches:
     - 'master'
+    - 'main'
     - 'dev'
     paths-ignore:
       - '**/README.md'
@@ -18,9 +19,14 @@ jobs:
     name: build and deploy
     runs-on: ubuntu-20.04
     steps:
-      - name: build
+      - name: "📥 Checkout Code"
+        uses: actions/checkout@v2.2.0
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
+      - name: "🛠️ Build"
         run: docker build -t bensuperpc/pvsneslib .
-      - name: deploy
+      - name: "📤 Upload to hub.docker.com"
         if: github.ref == 'refs/heads/master'
         run: |
             docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}

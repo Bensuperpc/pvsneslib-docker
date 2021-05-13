@@ -34,28 +34,28 @@ RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
 RUN cd /c/snesdev/tools/constify \
 	&& cp Makefile Makefile.orig\
 	&& sed 's:-lregex::g' Makefile.orig >Makefile\
-	&& make all \
+	&& make all -j4 \
 	&& cp constify.exe /bin/constify
 
 WORKDIR /c/snesdev/tools/snestools
-RUN make all
+RUN make all -j4
 RUN cp snestools.exe /c/snesdev/devkitsnes/tools/snestools
 
 WORKDIR /c/snesdev/tools/gfx2snes
-RUN make all
+RUN make all -j4
 RUN cp gfx2snes.exe /c/snesdev/devkitsnes/tools/gfx2snes
 
 WORKDIR /c/snesdev/tools/bin2txt
 COPY bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
-RUN make all
+RUN make all -j4
 RUN cp bin2txt.exe /c/snesdev/devkitsnes/tools/bin2txt
 
 WORKDIR /c/snesdev/tools/smconv
-RUN make all
+RUN make all -j4
 RUN cp smconv.exe /c/snesdev/devkitsnes/tools/smconv
 
 WORKDIR /snesbrr/src
-RUN make all
+RUN make all -j4
 RUN cp snesbrr /c/snesdev/devkitsnes/tools/snesbrr
 
 RUN chmod 777 /c/snesdev/devkitsnes/bin/*
@@ -65,6 +65,6 @@ ENV PATH="/c/snesdev/devkitsnes/bin:${PATH}"
 ENV PVSNESLIB_HOME="/c/snesdev/"
 
 # Run tests
-RUN cd /c/snesdev/snes-examples && make all && make clean
+RUN cd /c/snesdev/snes-examples && make all -j1 && make clean
 
 WORKDIR /src

@@ -9,7 +9,9 @@
 FROM i386/ubuntu:focal
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install make python linux-libc-dev binutils gcc g++ git wget cmake -y 
+RUN apt-get update && \
+	apt-get install make python linux-libc-dev binutils gcc g++ git wget cmake -y && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN git clone https://github.com/vhelin/wla-dx /wla-dx \
 	&& cd /wla-dx \

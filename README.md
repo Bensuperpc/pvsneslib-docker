@@ -2,7 +2,7 @@
 
 ## build the from your local project path
 ```
-docker run --rm -v ${PWD}:/src/ -it bensuperpc/pvsnesli
+docker run --rm -v "${PWD}":/src/ -it bensuperpc/pvsneslib
 make
 ```
 

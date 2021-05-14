@@ -25,9 +25,9 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
       - name: "🛠️ Build"
-        run: docker build -t bensuperpc/pvsneslib .
+        run: docker build -t bensuperpc/pvsneslib:$(date +%Y-%m-%d) -t bensuperpc/pvsneslib:latest .
       - name: "📤 Upload to hub.docker.com"
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/master/main'
         run: |
             docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
-            docker image push bensuperpc/pvsneslib
+            docker image push bensuperpc/pvsneslib --all-tags

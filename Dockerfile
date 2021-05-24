@@ -6,7 +6,14 @@
 # i386 because if we use 64bit gcc some tools segault.
 # trusty because some tools don't compile with latest gcc.
 # didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
-FROM i386/ubuntu:focal
+ARG DOCKER_IMAGE=i386/ubuntu:focal
+FROM $DOCKER_IMAGE
+
+LABEL author="Bensuperpc <bensuperpc@gmail.com>"
+LABEL mantainer="Bensuperpc <bensuperpc@gmail.com>"
+
+ARG BUILD_VERSION="1.0.0"
+ENV BUILD_VERSION=$BUILD_VERSION
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
@@ -17,7 +24,7 @@ RUN git clone https://github.com/vhelin/wla-dx /wla-dx \
 	&& cd /wla-dx \
 	&& mkdir build && cd build \
 	&& cmake .. \
-	&& cmake --build . --config Release -- -j 6 \
+	&& cmake --build . --config Release -- -j$(nproc) \
 	&& cmake -P cmake_install.cmake
 
 RUN git clone https://github.com/boldowa/snesbrr /snesbrr
@@ -37,28 +44,28 @@ RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
 RUN cd /c/snesdev/tools/constify \
 	&& cp Makefile Makefile.orig\
 	&& sed 's:-lregex::g' Makefile.orig >Makefile\
-	&& make all -j6 \
+	&& make all -j$(nproc) \
 	&& cp constify.exe /bin/constify
 
 WORKDIR /c/snesdev/tools/snestools
-RUN make all -j6
+RUN make all -j$(nproc)
 RUN cp snestools.exe /c/snesdev/devkitsnes/tools/snestools
 
 WORKDIR /c/snesdev/tools/gfx2snes
-RUN make all -j6
+RUN make all -j$(nproc)
 RUN cp gfx2snes.exe /c/snesdev/devkitsnes/tools/gfx2snes
 
 WORKDIR /c/snesdev/tools/bin2txt
 COPY patch/bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
-RUN make all -j6
+RUN make all -j$(nproc)
 RUN cp bin2txt.exe /c/snesdev/devkitsnes/tools/bin2txt
 
 WORKDIR /c/snesdev/tools/smconv
-RUN make all -j6
+RUN make all -j$(nproc)
 RUN cp smconv.exe /c/snesdev/devkitsnes/tools/smconv
 
 WORKDIR /snesbrr/src
-RUN make all -j6
+RUN make all -j$(nproc)
 RUN cp snesbrr /c/snesdev/devkitsnes/tools/snesbrr
 
 RUN chmod 777 /c/snesdev/devkitsnes/bin/*
@@ -71,3 +78,14 @@ ENV PVSNESLIB_HOME="/c/snesdev/"
 RUN cd /c/snesdev/snes-examples && make all -j1 && make clean
 
 WORKDIR /src
+
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.build-date=$BUILD_DATE
+LABEL org.label-schema.name="bensuperpc/pvsneslib"
+LABEL org.label-schema.description="build pvsneslib compiler"
+LABEL org.label-schema.version=$BUILD_VERSION
+LABEL org.label-schema.vendor="Bensuperpc"
+LABEL org.label-schema.url="http://bensuperpc.com/"
+LABEL org.label-schema.vcs-url="https://github.com/Bensuperpc/pvsneslib"
+LABEL org.label-schema.vcs-ref=$VCS_REF
+LABEL org.label-schema.docker.cmd="docker build -t bensuperpc/pvsneslib -f Dockerfile ."

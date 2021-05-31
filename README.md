@@ -3,12 +3,11 @@
 ## build the from your local project path
 ```
 docker run --rm -v "${PWD}":/src/ -it bensuperpc/pvsneslib
-make
 ```
 
 ## build docker image
 ```
-docker build -t bensuperpc/pvsneslib .
+make linux/386
 ```
 
 #### Note for Windows: Replace `${PWD}` with `%cd%` in all commands

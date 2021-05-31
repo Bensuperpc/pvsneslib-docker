@@ -1,4 +1,5 @@
 # pvsneslib-docker
+[![pvsneslib-docker](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml/badge.svg)](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml)
 
 ## build the from your local project path
 ```

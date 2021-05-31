@@ -79,13 +79,13 @@ RUN cd /c/snesdev/snes-examples && make all -j1 && make clean
 
 WORKDIR /src
 
-LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.build-date=$BUILD_DATE
-LABEL org.label-schema.name="bensuperpc/pvsneslib"
-LABEL org.label-schema.description="build pvsneslib compiler"
-LABEL org.label-schema.version=$BUILD_VERSION
-LABEL org.label-schema.vendor="Bensuperpc"
-LABEL org.label-schema.url="http://bensuperpc.com/"
-LABEL org.label-schema.vcs-url="https://github.com/Bensuperpc/pvsneslib"
-LABEL org.label-schema.vcs-ref=$VCS_REF
-LABEL org.label-schema.docker.cmd="docker build -t bensuperpc/pvsneslib -f Dockerfile ."
+LABEL org.label-schema.schema-version="1.0" \
+      org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.name="bensuperpc/pvsneslib" \
+      org.label-schema.description="build pvsneslib compiler" \
+      org.label-schema.version=$BUILD_VERSION \
+      org.label-schema.vendor="Bensuperpc" \
+      org.label-schema.url="http://bensuperpc.com/" \
+      org.label-schema.vcs-url="https://github.com/Bensuperpc/pvsneslib" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.docker.cmd="docker build -t bensuperpc/pvsneslib -f Dockerfile ."

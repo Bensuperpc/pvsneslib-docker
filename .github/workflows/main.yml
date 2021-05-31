@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - 'main'
+    - 'master'
     - 'dev'
     paths-ignore:
       - '**/README.md'
@@ -11,29 +12,23 @@ on:
     branches:
     - '*'
   schedule:
-    - cron: '0 3 * * 1'  # every monday at 7:00 https://crontab.guru/#0_7_*_*_1
+    - cron: '0 7 * * 1'  # every monday at 7:00 https://crontab.guru/#0_7_*_*_1
+
 jobs:
   image:
-    name: build and deploy
+    name: pvsneslib-docker
     runs-on: ubuntu-20.04
-    strategy:
-      fail-fast: false
-      matrix:
-        arch_name: [amd64]
     steps:
       - name: "📥 Checkout Code"
         uses: actions/checkout@v2.2.0
         with:
           submodules: 'recursive'
           fetch-depth: 0
-      - name: "Docker QEMU"
-        run: make qemu_x86
-      - name: "🛠️ Build"
-        run: make build_${{ matrix.arch_name }}
-      - name: "📤 Upload to hub.docker.com"
-        if: ${{ github.ref == 'refs/heads/master' }}
+      - name: "🛠️ Docker QEMU"
+        run: make qemu
+      - name: "🛠️ Build and 📤 Upload to hub.docker.com"
         run: |
             docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
-            docker image push bensuperpc/pvsneslib --all-tags
-      - name: "Clean"
+            make all
+      - name: "🧹 Clean"
         run: make clean

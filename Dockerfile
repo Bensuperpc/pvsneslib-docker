@@ -6,7 +6,7 @@
 # i386 because if we use 64bit gcc some tools segault.
 # trusty because some tools don't compile with latest gcc.
 # didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
-ARG DOCKER_IMAGE=i386/ubuntu:focal
+ARG DOCKER_IMAGE=debian:buster-slim
 FROM $DOCKER_IMAGE
 
 LABEL author="Bensuperpc <bensuperpc@gmail.com>"

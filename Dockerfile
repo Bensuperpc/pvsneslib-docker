@@ -9,13 +9,7 @@
 ARG DOCKER_IMAGE=debian:buster-slim
 FROM $DOCKER_IMAGE as builder
 
-LABEL author="Bensuperpc <bensuperpc@gmail.com>"
-LABEL mantainer="Bensuperpc <bensuperpc@gmail.com>"
-
-ARG BUILD_VERSION="1.0.0"
-ENV BUILD_VERSION=$BUILD_VERSION
-
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
 	apt-get install make python linux-libc-dev binutils gcc g++ git wget cmake -y && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -73,7 +67,13 @@ RUN chmod 777 /c/snesdev/devkitsnes/bin/*
 ARG DOCKER_IMAGE=i386/ubuntu:focal
 FROM $DOCKER_IMAGE as runtime
 
-ARG DEBIAN_FRONTEND=noninteractive
+LABEL author="Bensuperpc <bensuperpc@gmail.com>"
+LABEL mantainer="Bensuperpc <bensuperpc@gmail.com>"
+
+ARG BUILD_VERSION="1.0.0"
+ENV BUILD_VERSION=$BUILD_VERSION
+
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
 	apt-get install make python2 --no-install-recommends -y && \
 	apt-get clean && rm -rf /var/lib/apt/lists/*

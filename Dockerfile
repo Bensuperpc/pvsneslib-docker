@@ -7,7 +7,7 @@
 # trusty because some tools don't compile with latest gcc.
 # didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
 ARG DOCKER_IMAGE=debian:buster-slim
-FROM $DOCKER_IMAGE
+FROM $DOCKER_IMAGE as builder
 
 LABEL author="Bensuperpc <bensuperpc@gmail.com>"
 LABEL mantainer="Bensuperpc <bensuperpc@gmail.com>"
@@ -70,12 +70,24 @@ RUN cp snesbrr /c/snesdev/devkitsnes/tools/snesbrr
 
 RUN chmod 777 /c/snesdev/devkitsnes/bin/*
 
+ARG DOCKER_IMAGE=i386/ubuntu:focal
+FROM $DOCKER_IMAGE as runtime
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+	apt-get install make python2 --no-install-recommends -y && \
+	apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /c /c
+COPY --from=builder /usr/local/bin /usr/local/bin
+
 ENV PATH="/c/snesdev/devkitsnes/bin:${PATH}"
 
 ENV PVSNESLIB_HOME="/c/snesdev/"
 
 # Run tests
-RUN cd /c/snesdev/snes-examples && make all -j1 && make clean
+RUN cd /c/snesdev/snes-examples && make audio debug games graphics hello_world \
+	pads random scoring sram testregion timer typeconsole -j$(nproc) && make clean
 
 WORKDIR /src
 

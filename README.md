@@ -6,6 +6,9 @@
 docker run --rm -v "${PWD}":/src/ -it bensuperpc/pvsneslib
 ```
 
+Or use this docker image:
+https://hub.docker.com/r/bensuperpc/pvsneslib
+
 ## build docker image
 ```
 make linux/386
@@ -15,4 +18,4 @@ make linux/386
 #### Exemples path : /c/snesdev/snes-examples
 
 Sample projects are available at https://github.com/alekmaul/pvsneslib
-
+Add Original author: https://github.com/Crazy-Piri/pvsneslib-docker

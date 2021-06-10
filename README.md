@@ -1,5 +1,5 @@
 # pvsneslib-docker
-[![pvsneslib-docker](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml/badge.svg)](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml)
+[![pvsneslib-docker](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml/badge.svg)](https://github.com/Bensuperpc/pvsneslib-docker/actions/workflows/main.yml) <img alt="Docker Image Size (latest by date)" src="https://img.shields.io/docker/image-size/bensuperpc/pvsneslib">
 
 ## build the from your local project path
 ```

@@ -1,11 +1,4 @@
-# To create the image:
-#   $ docker build -t amiga -f amiga.Dockerfile .
-# To run the container:
-#   $ docker run -v ${PWD}:/src/ -it amiga
-
-# i386 because if we use 64bit gcc some tools segault.
-# trusty because some tools don't compile with latest gcc.
-# didnt had time to debug so I just choose the oldest supported ubuntu that worked :)
+# Original Author : https://github.com/Crazy-Piri/pvsneslib-docker
 ARG DOCKER_IMAGE=debian:buster-slim
 FROM $DOCKER_IMAGE as builder
 
@@ -29,8 +22,9 @@ RUN git clone https://github.com/alekmaul/pvsneslib /c/snesdev\
 	&& sed 's:\\\\:/:g' /c/snesdev/devkitsnes/snes_rules.orig >/c/snesdev/devkitsnes/snes_rules\
 	&& cd /c/snesdev/compiler/tcc-65816\
 	&& rm -rf 816-tcc.exe\
-	&& make 816-tcc.exe\
-	&& cp 816-tcc.exe /c/snesdev/devkitsnes/bin/816-tcc
+	&& ./configure\
+	&& make 816-tcc -j$(nproc)\
+	&& cp 816-tcc /c/snesdev/devkitsnes/bin/816-tcc
 
 # /c/snesdev/devkitsnes/bin/816-opt.py is expecting python to be in /c/Python27/python
 RUN mkdir -p /c/Python27/ && ln -sf /usr/bin/python /c/Python27/python
@@ -39,24 +33,24 @@ RUN cd /c/snesdev/tools/constify \
 	&& cp Makefile Makefile.orig\
 	&& sed 's:-lregex::g' Makefile.orig >Makefile\
 	&& make all -j$(nproc) \
-	&& cp constify.exe /bin/constify
+	&& cp constify /bin/constify
 
 WORKDIR /c/snesdev/tools/snestools
 RUN make all -j$(nproc)
-RUN cp snestools.exe /c/snesdev/devkitsnes/tools/snestools
+RUN cp snestools /c/snesdev/devkitsnes/tools/snestools
 
 WORKDIR /c/snesdev/tools/gfx2snes
 RUN make all -j$(nproc)
-RUN cp gfx2snes.exe /c/snesdev/devkitsnes/tools/gfx2snes
+RUN cp gfx2snes /c/snesdev/devkitsnes/tools/gfx2snes
 
 WORKDIR /c/snesdev/tools/bin2txt
 COPY patch/bin2txt.c /c/snesdev/tools/bin2txt/bin2txt.c
 RUN make all -j$(nproc)
-RUN cp bin2txt.exe /c/snesdev/devkitsnes/tools/bin2txt
+RUN cp bin2txt /c/snesdev/devkitsnes/tools/bin2txt
 
 WORKDIR /c/snesdev/tools/smconv
 RUN make all -j$(nproc)
-RUN cp smconv.exe /c/snesdev/devkitsnes/tools/smconv
+RUN cp smconv /c/snesdev/devkitsnes/tools/smconv
 
 WORKDIR /snesbrr/src
 RUN make all -j$(nproc)

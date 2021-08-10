@@ -1,0 +1,6 @@
+[submodule "pvsneslib"]
+	path = pvsneslib
+	url = https://github.com/alekmaul/pvsneslib
+[submodule "wla-dx"]
+	path = wla-dx
+	url = https://github.com/vhelin/wla-dx.git

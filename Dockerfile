@@ -21,9 +21,9 @@ RUN git clone https://github.com/alekmaul/pvsneslib /c/snesdev\
 	&& cp /c/snesdev/devkitsnes/snes_rules /c/snesdev/devkitsnes/snes_rules.orig\
 	&& sed 's:\\\\:/:g' /c/snesdev/devkitsnes/snes_rules.orig >/c/snesdev/devkitsnes/snes_rules\
 	&& cd /c/snesdev/compiler/tcc-65816\
-	&& rm -rf 816-tcc.exe\
+	&& rm -rf 816-tcc \
 	&& ./configure\
-	&& make 816-tcc -j$(nproc)\
+	&& make -j$(nproc)\
 	&& cp 816-tcc /c/snesdev/devkitsnes/bin/816-tcc
 
 # /c/snesdev/devkitsnes/bin/816-opt.py is expecting python to be in /c/Python27/python

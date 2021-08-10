@@ -32,7 +32,7 @@ UUID := $(shell cat /proc/sys/kernel/random/uuid)
 VERSION := 1.0.0
 
 #Not in debian buster : riscv64
-
+# Disable linux/amd64 linux/arm64 linux/s390x linux/arm/v7 linux/arm/v6
 ARCH_LIST := linux/386
 comma:= ,
 COM_ARCH_LIST:= $(subst $() $(),$(comma),$(ARCH_LIST))
@@ -53,8 +53,8 @@ push: all
 # https://github.com/linuxkit/linuxkit/tree/master/pkg/binfmt
 qemu:
 	export DOCKER_CLI_EXPERIMENTAL=enabled
-	$(DOCKER) run --rm --privileged linuxkit/binfmt:v0.8
-	$(DOCKER) buildx create --name mybuilder --driver docker-container --use
+	$(DOCKER) run --rm --privileged multiarch/qemu-user-static --reset -p yes
+	$(DOCKER) buildx create --name qemu_builder --driver docker-container --use
 	$(DOCKER) buildx inspect --bootstrap
 
 clean:
